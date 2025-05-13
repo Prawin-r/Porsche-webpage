@@ -7,6 +7,7 @@ export default function Hero() {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false); // Track video load status
 
   useEffect(() => {
     // Detect mobile screen size
@@ -23,6 +24,10 @@ export default function Hero() {
   const scrollToModels = () => {
     const modelsSection = document.getElementById("models");
     modelsSection.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleVideoLoad = () => {
+    setIsVideoLoaded(true); // Set video as loaded once it is ready
   };
 
   return (
@@ -46,6 +51,7 @@ export default function Hero() {
             playsInline
             preload="none"
             className="absolute top-0 left-0 w-full h-full object-cover"
+            onCanPlayThrough={handleVideoLoad} // Trigger when video is ready
           >
             <source src="/models/Porsche-Video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
@@ -53,6 +59,13 @@ export default function Hero() {
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-50" />
         </motion.div>
+      )}
+
+      {/* Video Loader Animation (only when video is not loaded) */}
+      {!isVideoLoaded && (
+        <div className="absolute inset-0 z-10 flex justify-center items-center">
+          <div className="loader"></div>
+        </div>
       )}
 
       {/* Fallback for JS-disabled browsers */}
