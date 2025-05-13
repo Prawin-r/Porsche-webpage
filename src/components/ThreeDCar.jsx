@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import "./Hero.css"; // Custom CSS for font if needed
 
 function CarModel() {
-  const { scene } = useGLTF("/models/porsche.glb");
+  const { scene } = useGLTF("/models/porsche-v1.glb");
   const carRef = useRef();
 
   useFrame(() => {

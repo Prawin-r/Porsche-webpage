@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
-
+import "./Hero.css";
 export default function AboutPage() {
   return (
     <section className="bg-white text-black flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-10">
       {/* Left: Text content */}
       <div className="md:w-1/2 mb-12 md:mb-0 text-left">
-        <h1 className="text-4xl font-extrabold mb-6">About Porsche</h1>
+        <h1 className="text-4xl font-extrabold mb-6 hero-font">About Porsche</h1>
         <p className="text-lg mb-4">
           Discover Porsche's legacy of precision engineering and performance.
           Explore our passion for speed and innovation, where cutting-edge

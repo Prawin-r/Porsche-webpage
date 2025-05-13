@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./Hero.css";
 import { FaPlay, FaPause } from "react-icons/fa";
@@ -6,6 +6,12 @@ import { FaPlay, FaPause } from "react-icons/fa";
 export default function Hero() {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detect mobile screen size
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const toggleVideo = () => {
     if (videoRef.current) {
@@ -24,24 +30,42 @@ export default function Hero() {
       id="home"
       className="min-h-screen relative bg-black text-white flex flex-col justify-center items-center hero-font"
     >
-      {/* Background Video */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-0"
-      >
-        <source src="/models/Porsche-video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {/* Fade-in background video + overlay (desktop only) */}
+      {!isMobile && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
+          className="absolute inset-0 z-0"
+        >
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="none"
+            className="absolute top-0 left-0 w-full h-full object-cover"
+          >
+            <source src="/models/Porsche-Video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+        </motion.div>
+      )}
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+      {/* Fallback for JS-disabled browsers */}
+      <noscript>
+        <img
+          src="/models/fallback.jpg"
+          alt="Porsche fallback"
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+      </noscript>
 
       {/* Hero content */}
-      <div className="relative z-20 h-full flex flex-col justify-center items-center text-white text-center px-4">
+      <div className="relative z-20 flex flex-col justify-center items-center text-white text-center px-4">
         <motion.h1
           initial={{ y: -60, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -70,14 +94,16 @@ export default function Hero() {
         </motion.button>
       </div>
 
-      {/* Play/Pause button */}
-      <button
-        onClick={toggleVideo}
-        className="absolute bottom-8 right-6 z-30 px-4 py-2 bg-white text-black rounded-full shadow-lg hover:bg-gray-200 transition"
-        aria-label="Toggle video"
-      >
-        {isPlaying ? <FaPause /> : <FaPlay />}
-      </button>
+      {/* Play/Pause Button - only on desktop */}
+      {!isMobile && (
+        <button
+          onClick={toggleVideo}
+          className="absolute bottom-8 right-6 z-30 px-4 py-2 bg-white text-black rounded-full shadow-lg hover:bg-gray-200 transition"
+          aria-label="Toggle video"
+        >
+          {isPlaying ? <FaPause /> : <FaPlay />}
+        </button>
+      )}
     </section>
   );
 }
