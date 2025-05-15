@@ -1,10 +1,11 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-import { useRef } from "react";
+import { useRef, Suspense, memo } from "react";
 import { motion } from "framer-motion";
-import "./Hero.css"; // Custom CSS for font if needed
-
-function CarModel() {
+import "./Hero.css"; // Optional: for custom font styles
+useGLTF.preload("/models/porsche-v1.glb");
+// Car Model Component (Memoized)
+const CarModel = memo(() => {
   const { scene } = useGLTF("/models/porsche-v1.glb");
   const carRef = useRef();
 
@@ -14,13 +15,13 @@ function CarModel() {
     }
   });
 
-  return <primitive ref={carRef} object={scene} scale={1.5} />;
-}
+  return <primitive ref={carRef} object={scene} scale={1} />;
+});
 
 export default function ThreeDCar() {
   return (
     <section className="relative h-[600px] bg-black flex flex-col items-center justify-center hero-font">
-      {/* Title and Description with Effects */}
+      {/* Title and Description */}
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -41,21 +42,26 @@ export default function ThreeDCar() {
         </motion.p>
       </motion.div>
 
-      {/* 3D Car Model */}
-      <Canvas camera={{ position: [0, 0, 5] }}>
-        <ambientLight intensity={0.3} /> {/* Soft ambient light */}
-        <directionalLight position={[5, 5, 5]} intensity={1} />{" "}
-        {/* Directional light */}
-        {/* Spotlight for the car */}
+      {/* 3D Model Canvas */}
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        shadows
+        dpr={[1, 2]}
+        className="z-0"
+      >
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
         <spotLight
-          position={[0, 2, 3]} // Position of the spotlight
-          angle={0.2} // Light cone angle
-          penumbra={1} // Soft edges for the spotlight
-          intensity={1.5} // Spotlight intensity
-          castShadow // Enable shadows
+          position={[0, 2, 3]}
+          angle={0.2}
+          penumbra={0.8}
+          intensity={1.5}
+          castShadow
         />
-        <OrbitControls enableZoom={false} />
-        <CarModel />
+        <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1} />
+        <Suspense fallback={null}>
+          <CarModel />
+        </Suspense>
       </Canvas>
     </section>
   );
