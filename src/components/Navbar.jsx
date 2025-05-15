@@ -21,7 +21,7 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 bg-black bg-opacity-70 text-white backdrop-blur-md">
+    <nav className=" top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 bg-black bg-opacity-100 text-white backdrop-blur-md">
       {/* Left: Hamburger Icon */}
       <div className="flex items-center">
         <button onClick={toggleMenu} className="p-2 focus:outline-none">
